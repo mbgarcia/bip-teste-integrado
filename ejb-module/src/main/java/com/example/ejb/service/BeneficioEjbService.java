@@ -6,9 +6,11 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Stateless
 public class BeneficioEjbService {
@@ -18,6 +20,17 @@ public class BeneficioEjbService {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Transactional
+    public void criarOuAtualizar(Beneficio e) {
+        em.persist(e);
+    }
+
+    public List<Beneficio> listAllBeneficios(){
+        TypedQuery<Beneficio> query = em.createQuery("select e from Beneficio e", Beneficio.class);
+
+        return query.getResultList();
+    }
 
     @Transactional()
     public void transfer(Long fromId, Long toId, BigDecimal amount) throws InvalidTransferException {
